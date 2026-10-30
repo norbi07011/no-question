@@ -1121,6 +1121,7 @@ a.feature:hover .feature__more{color:#fff}
 .mlab__n{font-family:var(--f-display);font-size:10px;letter-spacing:.22em;color:var(--ink-3)}
 .mlab__card strong{font-family:var(--f-display);font-weight:800;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:#fff}
 .mlab__card small{font-size:12px;color:#a9a7b8}
+@media (max-width:1180px){.mlab__card small{display:none}.mlab__card strong{font-size:11px}}
 .mic__copy{position:absolute;inset:0;width:var(--wrap);margin:0 auto;display:grid;align-items:center;pointer-events:none;z-index:3}
 .mic__ch{grid-area:1/1;max-width:min(440px,34vw);opacity:0;will-change:opacity,transform}
 .mic__ch.is-on{pointer-events:auto}

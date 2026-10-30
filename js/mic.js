@@ -88,7 +88,7 @@
     dirty = true;
   }
   layout();
-  window.addEventListener("resize", function () { var was = mob; layout(); if (was !== mob && started) { started = false; loaded = 0; start(); } });
+  window.addEventListener("resize", function () { var was = mob; layout(); labels.forEach(function (l) { l.cw = 0; l.ch = 0; }); if (was !== mob && started) { started = false; loaded = 0; start(); } });
 
   /* ---------- scroll ---------- */
   var prog = 0, s = 0, visible = false;
@@ -142,6 +142,7 @@
     var nx = ay / al, ny = -ax / al; if (ny > 0) { nx = -nx; ny = -ny; } // n points "up"
     var fade = 1 - sm(0.78, 0.84, s);
     var copyR = 0; chs.forEach(function (c) { if (parseFloat(c.style.opacity) > 0.05) { var r = c.getBoundingClientRect(); copyR = Math.max(copyR, r.left + Math.min(r.width, c.scrollWidth) + 16); } });
+    var lay = [];
     labels.forEach(function (l, i) {
       var vis = sm(0.5 + i * 0.05, 0.62 + i * 0.05, e) * fade;
       l.a = vis;
@@ -155,17 +156,29 @@
         var cw = l.cw || (l.cw = l.card.offsetWidth || 200), x = p[0] + ex;
         if ((ex < 0 && x - cw - 10 < copyR) || (ex >= 0 && x + cw + 10 > W - 16)) { ex = -ex; ey = -ey; }
       }
-      l.el.style.transform = "translate3d(" + p[0].toFixed(1) + "px," + p[1].toFixed(1) + "px,0)";
+      lay.push({ l: l, p: p, ex: ex, ey: ey, right: ex >= 0, h: l.ch || (l.ch = l.card.offsetHeight || 44) });
+    });
+    // resolve vertical collisions between cards on the same side
+    if (!mob) [true, false].forEach(function (side) {
+      var g = lay.filter(function (o) { return o.right === side; }).sort(function (a, b) { return (a.p[1] + a.ey) - (b.p[1] + b.ey); });
+      for (var k = 1; k < g.length; k++) {
+        var prev = g[k - 1], cur = g[k], need = (prev.h + cur.h) / 2 + 8;
+        var py = prev.p[1] + prev.ey, cy = cur.p[1] + cur.ey;
+        if (cy - py < need) cur.ey += need - (cy - py);
+      }
+    });
+    lay.forEach(function (o) {
+      var l = o.l, len = Math.hypot(o.ex, o.ey);
+      l.el.style.transform = "translate3d(" + o.p[0].toFixed(1) + "px," + o.p[1].toFixed(1) + "px,0)";
       l.line.style.width = len.toFixed(1) + "px";
-      l.line.style.transform = "rotate(" + (Math.atan2(ey, ex) * 180 / Math.PI).toFixed(2) + "deg)";
-      var right = ex >= 0;
-      l.card.style.transform = "translate3d(" + ex.toFixed(1) + "px," + ey.toFixed(1) + "px,0) translate(" + (right ? "10px" : "calc(-100% - 10px)") + ",-50%)";
-      l.card.style.textAlign = right ? "left" : "right";
+      l.line.style.transform = "rotate(" + (Math.atan2(o.ey, o.ex) * 180 / Math.PI).toFixed(2) + "deg)";
+      l.card.style.transform = "translate3d(" + o.ex.toFixed(1) + "px," + o.ey.toFixed(1) + "px,0) translate(" + (o.right ? "10px" : "calc(-100% - 10px)") + ",-50%)";
+      l.card.style.textAlign = o.right ? "left" : "right";
     });
   }
   requestAnimationFrame(frame);
   // relabel after language switch
   document.addEventListener("click", function (ev) {
-    if (ev.target.closest && ev.target.closest("[data-lang]")) setTimeout(function () { lastS = -1; labels.forEach(function (l) { l.cw = 0; }); }, 40);
+    if (ev.target.closest && ev.target.closest("[data-lang]")) setTimeout(function () { lastS = -1; labels.forEach(function (l) { l.cw = 0; l.ch = 0; }); }, 40);
   });
 })();
