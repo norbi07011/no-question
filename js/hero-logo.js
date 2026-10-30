@@ -6,6 +6,15 @@
    ========================================================= */
 (function () {
   "use strict";
+  // background: our concert footage loops behind the logo
+  var hv = document.getElementById("heroVideo");
+  if (hv) {
+    var small = window.innerWidth < 760 || window.innerHeight > window.innerWidth;
+    if (small && hv.dataset.pm) hv.poster = hv.dataset.pm;
+    hv.src = small ? hv.dataset.m : hv.dataset.d;
+    var tryPlay = function () { var pr = hv.play(); if (pr) pr.catch(function () {}); };
+    tryPlay(); document.addEventListener("visibilitychange", function () { if (!document.hidden) tryPlay(); });
+  }
   var cv = document.getElementById("heroLogo");
   if (!cv || !window.NQ_LOGO) return;
   var hero = cv.closest(".hero") || cv.parentNode;

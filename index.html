@@ -19,6 +19,7 @@
 <main id="main">
 
 <section class="hero hero--logo" id="hero">
+  <div class="hero__video" aria-hidden="true"><video id="heroVideo" muted loop playsinline autoplay preload="auto" poster="assets/img/hero-bg.jpg" data-d="assets/video/hero-bg.mp4" data-m="assets/video/hero-bg-m.mp4" data-pm="assets/img/hero-bg-m.jpg"></video><span class="hero__veil"></span></div>
   <canvas class="hero__logo" id="heroLogo" aria-hidden="true"></canvas>
   <div class="hero__inner">
     <p class="kicker reveal-up" data-i18n="hero.kicker"></p>
@@ -36,54 +37,37 @@
   <div class="hero__scroll"><span class="hero__mouse"></span><span data-i18n="hero.scroll"></span></div>
 </section>
 
-<section class="nqf" id="nqFilm" aria-label="No Question — live">
-  <div class="nqf__sticky">
-    <canvas id="nqfCanvas" aria-hidden="true"></canvas>
-    <div class="nqf__shade" aria-hidden="true"></div>
-    <div class="nqf__grain" aria-hidden="true"></div>
-    <div class="nqf__ch" data-from="0" data-to="0.235">
-      <div class="nqf__copy">
-        <p class="tag"><span class="nqf__n">01</span><span data-i18n="film.c1"></span></p>
-        <h2 class="nqf__t" data-i18n="film.t1"></h2>
-        <p class="nqf__d" data-i18n="film.d1"></p>
+<section class="gear" id="nqGear" aria-label="Gear">
+  <div class="gear__sticky">
+    <canvas id="gearCanvas" aria-hidden="true"></canvas>
+    <div class="gear__labels" aria-hidden="true"></div>
+    <div class="gear__copy">
+      <div class="gear__ch">
+        <p class="tag"><span class="gear__n">01</span><span data-i18n="gear.c1"></span></p>
+        <h2 class="gear__t" data-i18n="gear.t1"></h2>
+        <p class="gear__d" data-i18n="gear.d1"></p>
       </div>
-    </div>
-    <div class="nqf__ch" data-from="0.265" data-to="0.485">
-      <div class="nqf__copy">
-        <p class="tag"><span class="nqf__n">02</span><span data-i18n="film.c2"></span></p>
-        <h2 class="nqf__t" data-i18n="film.t2"></h2>
-        <p class="nqf__d" data-i18n="film.d2"></p>
+      <div class="gear__ch">
+        <p class="tag"><span class="gear__n">02</span><span data-i18n="gear.c2"></span></p>
+        <h2 class="gear__t" data-i18n="gear.t2"></h2>
+        <p class="gear__d" data-i18n="gear.d2"></p>
       </div>
-    </div>
-    <div class="nqf__ch" data-from="0.515" data-to="0.735">
-      <div class="nqf__copy">
-        <p class="tag"><span class="nqf__n">03</span><span data-i18n="film.c3"></span></p>
-        <h2 class="nqf__t" data-i18n="film.t3"></h2>
-        <p class="nqf__d" data-i18n="film.d3"></p>
-      </div>
-    </div>
-    <div class="nqf__ch" data-from="0.765" data-to="1.01" data-next-event>
-      <div class="nqf__copy">
-        <p class="tag"><span class="nqf__n">04</span><span data-i18n="film.c4"></span></p>
-        <h2 class="nqf__t" data-i18n="film.t4"></h2>
-        <p class="nqf__d" data-i18n="film.d4"></p>
+      <div class="gear__ch" data-next-event>
+        <p class="tag"><span class="gear__n">03</span><span data-i18n="gear.c3"></span></p>
+        <h2 class="gear__t" data-i18n="gear.t3"></h2>
+        <p class="gear__d" data-i18n="gear.d3"></p>
         <div class="hero__ctas">
           <a href="#" data-ne-ticket class="btn btn--grad"><span data-i18n="event.buy"></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
           <a href="events.html" data-ne-link class="btn btn--ghost"><span data-ne-title></span></a>
         </div>
       </div>
     </div>
-    <nav class="nqf__hud" aria-label="Film">
-      <span class="nqf__rail"><i id="nqfBar"></i></span>
-      <ol>
-        <li><button data-go="0.02"><span>01</span><b data-i18n="film.c1"></b></button></li>
-        <li><button data-go="0.28"><span>02</span><b data-i18n="film.c2"></b></button></li>
-        <li><button data-go="0.53"><span>03</span><b data-i18n="film.c3"></b></button></li>
-        <li><button data-go="0.80"><span>04</span><b data-i18n="film.c4"></b></button></li>
-      </ol>
+    <nav class="gear__hud" aria-label="Gear">
+      <button class="is-on"><span>01</span><b data-i18n="gear.c1"></b></button>
+      <button><span>02</span><b data-i18n="gear.c2"></b></button>
+      <button><span>03</span><b data-i18n="gear.c3"></b></button>
     </nav>
-    <div class="nqf__load" aria-hidden="true"><i></i></div>
-    <button class="nqc__skip nqf__skip" id="nqfSkip"><span data-i18n="club.skip"></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg></button>
+    <div class="gear__foot"><span class="gear__count"><b class="gear__num">01</b> / 03</span><span class="gear__bar"><i></i></span><span data-i18n="gear.scroll"></span></div>
   </div>
 </section>
 
@@ -207,7 +191,7 @@
 
 <script src="js/scene.js"></script>
 
-<script src="js/logo-data.js"></script><script src="js/hero-logo.js"></script><script src="js/film.js"></script>
+<script src="js/logo-data.js"></script><script src="js/hero-logo.js"></script><script src="js/gear.js"></script>
 <script src="js/app.js"></script>
 <script src="js/carousel.js"></script>
 
