@@ -12,8 +12,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@400;500;600;700&family=Unbounded:wght@400;600;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="vendor/leaflet.css?v=1793367759">
-<link rel="stylesheet" href="css/style.css?v=1793367759">
+<link rel="stylesheet" href="vendor/leaflet.css?v=1793371037">
+<link rel="stylesheet" href="css/style.css?v=1793371037">
 </head>
 <body data-page="home" data-scene="ambient">
 <main id="main">
@@ -37,7 +37,35 @@
   <div class="hero__scroll"><span class="hero__mouse"></span><span data-i18n="hero.scroll"></span></div>
 </section>
 
-
+<section class="mic" id="nqMic" aria-label="Microphone">
+  <div class="mic__sticky">
+    <div class="mic__stage" aria-hidden="true"><canvas class="mic__canvas"></canvas></div>
+    <div class="mic__labels" aria-hidden="true"></div>
+    <div class="mic__copy">
+      <div class="mic__ch">
+        <p class="tag"><span data-i18n="mic.tag"></span></p>
+        <h2 class="mic__t" data-i18n="mic.t1"></h2>
+        <p class="mic__d" data-i18n="mic.d1"></p>
+      </div>
+      <div class="mic__ch">
+        <p class="tag"><span class="mic__n">07</span><span data-i18n="mic.tag2"></span></p>
+        <h2 class="mic__t" data-i18n="mic.t2"></h2>
+        <p class="mic__d" data-i18n="mic.d2"></p>
+        <ol class="mic__legend"></ol>
+      </div>
+      <div class="mic__ch" data-next-event>
+        <p class="tag"><span data-i18n="mic.tag3"></span></p>
+        <h2 class="mic__t" data-i18n="mic.t3"></h2>
+        <p class="mic__d" data-i18n="mic.d3"></p>
+        <div class="hero__ctas">
+          <a href="#" data-ne-ticket class="btn btn--grad"><span data-i18n="event.buy"></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          <a href="events.html" data-ne-link class="btn btn--ghost"><span data-ne-title></span></a>
+        </div>
+      </div>
+    </div>
+    <div class="mic__foot"><span class="mic__bar"><i></i></span><span data-i18n="mic.scroll"></span><span class="mic__loading"><i class="mic__load"></i></span></div>
+  </div>
+</section>
 
 <section class="marquee" aria-hidden="true">
   <div class="marquee__row" data-dir="1"><div class="marquee__track" id="wordsA"></div></div>
@@ -148,20 +176,20 @@
 </section>
 
 </main>
-<script src="js/config.js?v=1793367759"></script>
-<script src="js/i18n.js?v=1793367759"></script>
-<script src="js/layout.js?v=1793367759"></script>
-<script src="vendor/three.min.js?v=1793367759"></script>
-<script src="vendor/gsap.min.js?v=1793367759"></script>
-<script src="vendor/ScrollTrigger.min.js?v=1793367759"></script>
-<script src="vendor/lenis.min.js?v=1793367759"></script>
-<script src="vendor/leaflet.js?v=1793367759"></script>
+<script src="js/config.js?v=1793371037"></script>
+<script src="js/i18n.js?v=1793371037"></script>
+<script src="js/layout.js?v=1793371037"></script>
+<script src="vendor/three.min.js?v=1793371037"></script>
+<script src="vendor/gsap.min.js?v=1793371037"></script>
+<script src="vendor/ScrollTrigger.min.js?v=1793371037"></script>
+<script src="vendor/lenis.min.js?v=1793371037"></script>
+<script src="vendor/leaflet.js?v=1793371037"></script>
 
-<script src="js/scene.js?v=1793367759"></script>
+<script src="js/scene.js?v=1793371037"></script>
 
-<script src="js/logo-data.js?v=1793367759"></script><script src="js/hero-logo.js?v=1793367759"></script>
-<script src="js/app.js?v=1793367759"></script>
-<script src="js/carousel.js?v=1793367759"></script>
+<script src="js/logo-data.js?v=1793371037"></script><script src="js/hero-logo.js?v=1793371037"></script><script src="js/mic-data.js?v=1793371037"></script><script src="js/mic.js?v=1793371037"></script>
+<script src="js/app.js?v=1793371037"></script>
+<script src="js/carousel.js?v=1793371037"></script>
 
 </body>
 </html>
