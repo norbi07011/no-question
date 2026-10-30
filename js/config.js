@@ -10,6 +10,7 @@ window.NQ_CONFIG = {
   email: "events@noquestion.nl",
   phone: "+31613922391",
   phoneLabel: "+31 6 13 92 23 91",
+  kvk: "74552651",
 
   socials: {
     instagram: "https://www.instagram.com/noquestionevents",
@@ -58,10 +59,10 @@ window.NQ_CONFIG = {
       start: "2026-10-10T20:00:00+02:00",
       doors: "2026-10-10T19:00:00+02:00",
       end: "2026-10-11T01:00:00+02:00",
-      clubId: null,
-      venue: "Cacaofabriek",
+      clubId: "cacaofabriek",
+      venue: "De Cacaofabriek",
       city: "Helmond",
-      address: "Cacaokade 1, Helmond",
+      address: "Cacaokade 1, 5705 LA Helmond",
       poster: "assets/img/poster-kali.jpg",
       ticketUrl: "",
       lineup: [
@@ -136,6 +137,8 @@ window.NQ_CONFIG = {
       links: { web: "https://www.effenaar.nl/", instagram: "https://www.instagram.com/effenaar", facebook: "https://www.facebook.com/share/1HrCUYUS8J/" } },
     { id: "baroeg", name: "Baroeg", type: "collab", role: "pr.club", city: "Rotterdam", logo: "assets/img/partners/baroeg.png",
       links: { web: "https://baroeg.nl/", instagram: "https://www.instagram.com/baroegrotterdam", facebook: "https://www.facebook.com/share/1JDA9yVvCN/", tiktok: "https://www.tiktok.com/@baroegnl" } },
+    { id: "cacaofabriek", name: "De Cacaofabriek", type: "collab", role: "pr.club", city: "Helmond", mark: "CACAO<small>FABRIEK</small>",
+      links: { web: "https://cacaofabriek.nl/", instagram: "https://www.instagram.com/decacaofabriek", facebook: "https://www.facebook.com/share/19JPXqL8tj/" } },
     { id: "qfactory", name: "Q-Factory", type: "collab", role: "pr.club", city: "Amsterdam", mark: "Q&#8209;FACTORY<small>AMSTERDAM</small>",
       links: { web: "https://q-factory.com/nl", instagram: "https://www.instagram.com/qfactory_adam", facebook: "https://www.facebook.com/share/1CD8FHVhXk/", tiktok: "https://www.tiktok.com/@qfactoryamsterdam" } }
   ],
@@ -177,6 +180,17 @@ window.NQ_CONFIG = {
         { f: "20260420 Yves Amsterdam concert 1.jpg", by: "Robbie Klinkenberg", lic: "CC BY 4.0", pos: "50% 35%" }
       ],
       links: { web: "https://q-factory.com/nl", instagram: "https://www.instagram.com/qfactory_adam", facebook: "https://www.facebook.com/share/1CD8FHVhXk/", tiktok: "https://www.tiktok.com/@qfactoryamsterdam" }
+    },
+    {
+      id: "cacaofabriek", name: "De Cacaofabriek", city: "Helmond",
+      address: "Cacaokade 1, 5705 LA Helmond",
+      lat: 51.47335, lng: 5.65536, color: "#ff7a3c", img: "assets/img/poster-kali.jpg",
+      photos: [
+        { f: "De Cacaofabriek achterkant - panoramio.jpg", by: "Theodenhugt", lic: "CC BY 3.0" },
+        { f: "Het poppodium in De Cacaofabriek.jpg", by: "Het Speelhuis", lic: "CC BY-SA 4.0" },
+        { f: "Exterieur OVERZICHT GEVELS - Helmond - 20285667 - RCE.jpg", by: "Paul van Galen / RCE", lic: "CC BY-SA 4.0" }
+      ],
+      links: { web: "https://cacaofabriek.nl/", instagram: "https://www.instagram.com/decacaofabriek", facebook: "https://www.facebook.com/share/19JPXqL8tj/" }
     }
   ]
 };

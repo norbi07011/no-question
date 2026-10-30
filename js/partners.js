@@ -49,7 +49,7 @@
   var intro = sec.querySelector(".pshow__intro"), now = sec.querySelector(".pshow__now"), nIdx = now.querySelector(".pshow__idx"), nName = now.querySelector(".pshow__name"), nRole = now.querySelector(".pshow__role"), nLinks = now.querySelector(".pshow__links");
   var fin = sec.querySelector(".pshow__final");
   var N = P.length, tiles = [];
-  var COL = ["242,230,58", "53,199,89", "120,110,255", "255,120,60", "70,170,255", "235,80,140", "242,230,58", "53,199,89", "120,110,255"];
+  var COL = ["242,230,58", "53,199,89", "120,110,255", "255,120,60", "70,170,255", "235,80,140", "242,230,58", "53,199,89", "120,110,255", "255,122,60"];
   function rnd(a, b) { return a + Math.random() * (b - a); }
   P.forEach(function (p, i) {
     var el = document.createElement("a");
@@ -58,6 +58,10 @@
     grid.appendChild(el);
     tiles.push({ el: el, p: p, sx: rnd(-1, 1), sy: rnd(-1, 1), sz: rnd(-1800, -700), rx: rnd(-55, 55), ry: rnd(-70, 70), rz: rnd(-25, 25), focus: 0, a: 0 });
   });
+  function gpos(i) { // grid slot, rows centred, a short last row centred too
+    var rows = Math.ceil(N / 3), row = Math.floor(i / 3), col = i % 3, cnt = Math.min(3, N - row * 3);
+    return [(col - (cnt - 1) / 2) * (T + GAP), (row - (rows - 1) / 2) * (T + GAP)];
+  }
   function pad(n) { return (n < 10 ? "0" : "") + n; }
   function clamp(x, a, b) { return x < a ? a : x > b ? b : x; }
   function ease(x) { x = clamp(x, 0, 1); return 1 - Math.pow(1 - x, 4); }
@@ -66,7 +70,8 @@
   var W = 0, H = 0, T = 160, GAP = 14, cx = 0, cy = 0, mob = false;
   function layout() {
     W = sec.clientWidth; H = window.innerHeight; mob = W < 860;
-    T = mob ? Math.min((W - 32 - GAP * 2) / 3, H * 0.15) : Math.min(H * 0.22, W * 0.13, 210);
+    var rows = Math.ceil(N / 3), k = 3 / Math.max(3, rows);
+    T = (mob ? Math.min((W - 32 - GAP * 2) / 3, H * 0.15) : Math.min(H * 0.22, W * 0.13, 210)) * (rows > 3 ? Math.max(0.78, k) : 1);
     cx = mob ? W / 2 : W * 0.68; cy = mob ? H * 0.64 : H * 0.53;
     grid.style.setProperty("--t", T.toFixed(1) + "px");
   }
@@ -103,8 +108,7 @@
     var active = spot > 0 && spot < 1 && s < 0.925 ? Math.min(N - 1, Math.floor(spot * N)) : -1;
     var fpos = spot * N - 0.5;
     tiles.forEach(function (o, i) {
-      var col = i % 3, row = Math.floor(i / 3);
-      var gx = (col - 1) * (T + GAP), gy = (row - 1) * (T + GAP);
+      var gp = gpos(i), gx = gp[0], gy = gp[1];
       var a = ease((assemble - 0.02 - i * 0.022) / 0.3);
       o.a = a;
       var x = gx + o.sx * W * 0.7 * (1 - a), y = gy + o.sy * H * 0.75 * (1 - a), z = o.sz * (1 - a);
@@ -124,8 +128,8 @@
     sec.classList.toggle("is-spot", active >= 0);
     if (active !== lastActive) { lastActive = active; if (active >= 0) setNow(active); }
     if (active >= 0) {
-      var c = tiles[active], ccol = active % 3, crow = Math.floor(active / 3);
-      glow.style.transform = "translate(" + (cx + (ccol - 1) * (T + GAP)).toFixed(0) + "px," + (cy + (crow - 1) * (T + GAP)).toFixed(0) + "px)";
+      var ap = gpos(active);
+      glow.style.transform = "translate(" + (cx + ap[0]).toFixed(0) + "px," + (cy + ap[1]).toFixed(0) + "px)";
     } else glow.style.transform = "translate(" + cx.toFixed(0) + "px," + cy.toFixed(0) + "px)";
     glow.style.opacity = (0.35 + 0.65 * Math.max(spot > 0 ? 1 : assemble * 0.6, ending)).toFixed(3);
     if (bar) bar.style.transform = "scaleX(" + s.toFixed(4) + ")";

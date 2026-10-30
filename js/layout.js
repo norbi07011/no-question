@@ -80,6 +80,7 @@
       "</div>" +
       '<div class="footer__giant" aria-hidden="true">' + LOGO + "</div>" +
       '<div class="wrap footer__row"><span>© <span class="js-year">2026</span> No Question Events. <span data-i18n="footer.rights"></span></span>' +
+        ((window.NQ_CONFIG || {}).kvk ? '<span class="footer__kvk"><span data-i18n="footer.kvk">KvK</span> ' + window.NQ_CONFIG.kvk + '</span>' : '') +
         '<a href="privacy.html" data-i18n="footer.privacy"></a><span data-i18n="footer.made"></span></div>' +
     "</footer>" +
     '<div class="lightbox" id="lightbox" aria-hidden="true" role="dialog" aria-modal="true">' +
