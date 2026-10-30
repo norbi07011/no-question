@@ -149,21 +149,33 @@ window.NQ_CONFIG = {
       address: "Dommelstraat 2, 5611 CK Eindhoven",
       lat: 51.4434, lng: 5.4797, color: "#f2e63a", img: "assets/img/stage-live.jpg",
       // photo of the venue itself (Wikimedia Commons, free licence — credit links to the file page)
-      photo: "https://commons.wikimedia.org/wiki/Special:FilePath/Poppodium_De_Effenaar.jpg?width=1200", photoCredit: "https://commons.wikimedia.org/wiki/File:Poppodium_De_Effenaar.jpg",
+      photos: [
+        { f: "Poppodium De Effenaar.jpg", by: "Choinowski", lic: "CC BY-SA 4.0" },
+        { f: "Effenaar - panoramio.jpg", by: "michiel1972", lic: "CC BY-SA 3.0" },
+        { f: "20250503 ARTMS Eindhoven concert 01.jpg", by: "Robbie Klinkenberg", lic: "CC BY 4.0", pos: "50% 70%" }
+      ],
       links: { web: "https://www.effenaar.nl/", instagram: "https://www.instagram.com/effenaar", facebook: "https://www.facebook.com/share/1HrCUYUS8J/" }
     },
     {
       id: "baroeg", name: "Baroeg", city: "Rotterdam",
       address: "Spinozaweg 300, 3076 ET Rotterdam",
       lat: 51.8786, lng: 4.5347, color: "#35c759", img: "assets/img/live-purple.jpg",
-      photo: "", photoCredit: "",   // new building (2026) — add an official photo here
+      photos: [
+        { f: "Het Baroeg Pand.jpg", by: "ColinvanVugt", lic: "CC BY-SA 4.0" },
+        { f: "Baroeg27042008.jpg", by: "Juvarra", lic: "CC BY-SA 3.0" },
+        { f: "40 jaar Baroeg- foto door André ten Brinke.jpg", by: "André ten Brinke / ColinvanVugt", lic: "CC BY-SA 4.0" }
+      ],
       links: { web: "https://baroeg.nl/", instagram: "https://www.instagram.com/baroegrotterdam", facebook: "https://www.facebook.com/share/1JDA9yVvCN/", tiktok: "https://www.tiktok.com/@baroegnl" }
     },
     {
       id: "qfactory", name: "Q-Factory", city: "Amsterdam",
       address: "Atlantisplein 1, 1093 NE Amsterdam",
       lat: 52.3575, lng: 4.9301, color: "#4a55ff", img: "assets/img/live-blue.jpg",
-      photo: "https://commons.wikimedia.org/wiki/Special:FilePath/2022_Amsterdam,_Q-Factory_02.jpg?width=1200", photoCredit: "https://commons.wikimedia.org/wiki/File:2022_Amsterdam,_Q-Factory_02.jpg",
+      photos: [
+        { f: "2022 Amsterdam, Q-Factory 01.jpg", by: "Kleon3", lic: "CC BY-SA 4.0" },
+        { f: "2022 Amsterdam, Q-Factory 05.jpg", by: "Kleon3", lic: "CC BY-SA 4.0" },
+        { f: "20260420 Yves Amsterdam concert 1.jpg", by: "Robbie Klinkenberg", lic: "CC BY 4.0", pos: "50% 35%" }
+      ],
       links: { web: "https://q-factory.com/nl", instagram: "https://www.instagram.com/qfactory_adam", facebook: "https://www.facebook.com/share/1CD8FHVhXk/", tiktok: "https://www.tiktok.com/@qfactoryamsterdam" }
     }
   ]

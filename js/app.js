@@ -482,6 +482,39 @@
   }
 
   /* =================== CLUBS + MAP =================== */
+  function commons(f, w) { return "https://commons.wikimedia.org/wiki/Special:FilePath/" + encodeURIComponent(f.replace(/ /g, "_")) + "?width=" + (w || 1000); }
+  function clubPhotos(c) {
+    var ph = c.photos || [];
+    if (!ph.length) return "";
+    var figs = ph.slice(0, 3).map(function (p, k) {
+      return '<a class="club__ph" href="https://commons.wikimedia.org/wiki/File:' + encodeURIComponent(p.f.replace(/ /g, "_")) + '" target="_blank" rel="noopener">' +
+        '<img src="' + commons(p.f, k ? 700 : 1100) + '" alt="' + esc(c.name) + '" loading="lazy" referrerpolicy="no-referrer"' + (p.pos ? ' style="object-position:' + p.pos + '"' : "") +
+        " onerror=\"this.parentNode.classList.add('is-empty')\"></a>";
+    }).join("");
+    var credit = ph.map(function (p) { return esc(p.by); }).join(", ");
+    return '<div class="club__gal">' + figs + '<span class="club__cr">' + credit + " · Wikimedia Commons</span></div>";
+  }
+  // real Google Maps view of one club (keyless embed), shown over the NL overview map
+  function showGmap(c) {
+    var wrap = $("#mapWrap"); if (!wrap) return;
+    var g = $(".gmap", wrap);
+    if (!g) {
+      g = document.createElement("div"); g.className = "gmap";
+      g.innerHTML = '<iframe title="Google Maps" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>' +
+        '<button type="button" class="gmap__back">← <span data-i18n="clubs.all">' + t("clubs.all") + '</span></button>' +
+        '<a class="gmap__open" target="_blank" rel="noopener">Google Maps ↗</a>';
+      wrap.appendChild(g);
+      $(".gmap__back", g).addEventListener("click", function () {
+        g.classList.remove("is-on"); $$(".club").forEach(function (x) { x.classList.remove("is-active"); });
+        if (map) { map.invalidateSize(); var pts = (CFG.clubs || []).filter(function (k) { return k.lat != null; }).map(function (k) { return [k.lat, k.lng]; }); if (pts.length > 1) map.flyToBounds(pts, { padding: [70, 70], maxZoom: 12, duration: reduced ? 0 : 1.2 }); }
+      });
+    }
+    var src = gmapsEmbed(c), ifr = $("iframe", g);
+    if (ifr.getAttribute("src") !== src) ifr.setAttribute("src", src);
+    $(".gmap__open", g).href = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(c.name + ", " + c.address);
+    g.classList.add("is-on");
+  }
+  function gmapsEmbed(c) { return "https://maps.google.com/maps?q=" + encodeURIComponent(c.name + ", " + c.address) + "&hl=" + (lang || "nl") + "&z=16&output=embed"; }
   var map, markers = {};
   function buildClubs() {
     var list = $("#clubsList"); if (!list) return;
@@ -493,13 +526,7 @@
       var b = document.createElement("article");
       b.className = "club" + (full ? " club--full" : ""); b.style.setProperty("--c", c.color); b.dataset.id = c.id; b.tabIndex = 0;
       b.innerHTML =
-        (full ? '<div class="club__imgs">' +
-          '<figure class="club__img"><img src="' + c.img + '" alt="" loading="lazy"><figcaption data-i18n="clubs.ours">' + t("clubs.ours") + '</figcaption></figure>' +
-          '<figure class="club__img club__venue">' +
-            (c.photo ? '<img src="' + esc(c.photo) + '" alt="' + esc(c.name) + '" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentNode.classList.add(\'is-empty\');this.remove()">' : "") +
-            '<a class="club__sv" target="_blank" rel="noopener" href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=' + c.lat + "," + c.lng + '">' + ICON.pin + '<span data-i18n="clubs.sv">' + t("clubs.sv") + "</span></a>" +
-            '<figcaption><span data-i18n="clubs.venue">' + t("clubs.venue") + "</span>" + (c.photoCredit ? '<span class="club__credit"> · <a href="' + esc(c.photoCredit) + '" target="_blank" rel="noopener">Wikimedia Commons</a></span>' : "") + "</figcaption>" +
-          "</figure></div>" : "") +
+        (full ? clubPhotos(c) : "") +
         '<span class="club__idx">0' + (i + 1) + "</span>" +
         '<div class="club__txt"><span class="club__name">' + esc(c.name) + (c.city ? " · " + esc(c.city) : "") + "</span>" +
         '<span class="club__addr ' + (has ? "" : "is-soon") + '">' + (has ? esc(c.address) : '<span data-i18n="clubs.soon">' + t("clubs.soon") + "</span>") + "</span>" +
@@ -510,7 +537,8 @@
       var focusClub = function (e) {
         if (e && e.target.closest && e.target.closest("a")) return;
         $$(".club").forEach(function (x) { x.classList.toggle("is-active", x === b); });
-        if (has && map) {
+        if (has && full) { showGmap(c); if (window.innerWidth < 900) scrollToEl($("#mapWrap")); }
+        else if (has && map) {
           map.flyTo([c.lat, c.lng], 15, { duration: reduced ? 0 : 1.8 });
           setTimeout(function () { if (markers[c.id]) markers[c.id].openPopup(); }, reduced ? 0 : 1800);
           if (window.innerWidth < 900) scrollToEl($("#mapWrap"));
@@ -527,8 +555,8 @@
     var el = $("#map"); if (!window.L || !el) return;
     var single = el.dataset.single;
     map = L.map("map", { zoomControl: true, scrollWheelZoom: false }).setView([52.15, 5.3], 7);
-    L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>', subdomains: "abcd", maxZoom: 19
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>', maxZoom: 19
     }).addTo(map);
     var pts = [];
     (CFG.clubs || []).forEach(function (c) {

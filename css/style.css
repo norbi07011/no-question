@@ -281,7 +281,7 @@ svg{fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-l
 .clubs__map-hud{position:absolute;left:16px;right:16px;bottom:16px;z-index:500;display:flex;justify-content:space-between;pointer-events:none;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-2);font-variant-numeric:tabular-nums}
 .clubs__map-hud span{padding:8px 12px;border-radius:999px;background:rgba(0,0,0,.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
 .leaflet-container{font-family:var(--f-body);background:#0b0b10}
-.leaflet-tile-pane{filter:saturate(.4) brightness(.9)}
+.leaflet-tile-pane{filter:none}
 .leaflet-control-zoom a{background:rgba(12,12,16,.85)!important;color:#fff!important;border-color:var(--line)!important}
 .leaflet-control-attribution{background:rgba(0,0,0,.5)!important;color:var(--ink-3)!important;font-size:10px}
 .leaflet-control-attribution a{color:var(--ink-2)!important}
@@ -1148,3 +1148,19 @@ a.feature:hover .feature__more{color:#fff}
   .glabel__line{width:48px}
   .glabel__txt strong{font-size:11px}.glabel__txt small{display:none}
 }
+
+/* ---------- clubs: venue photo gallery + Google Maps view ---------- */
+.club--full .club__gal{grid-column:1/-1;position:relative;display:grid;grid-template-columns:2fr 1fr;grid-template-rows:1fr 1fr;gap:2px;height:240px;background:#000;border-radius:inherit;border-bottom-left-radius:0;border-bottom-right-radius:0;overflow:hidden}
+.club__ph{position:relative;display:block;overflow:hidden;background:linear-gradient(135deg,#15151d,#0b0b10)}
+.club__ph:first-child{grid-row:1/3}
+.club__ph img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 1s var(--ease),filter .6s}
+.club__ph:hover img{transform:scale(1.06)}
+.club__ph.is-empty img{display:none}
+.club__cr{position:absolute;left:12px;bottom:10px;z-index:2;max-width:62%;font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.8);text-shadow:0 1px 6px rgba(0,0,0,.8);pointer-events:none}
+.club--full .club__gal::after{content:"";position:absolute;left:0;right:0;bottom:0;height:45%;background:linear-gradient(0deg,rgba(0,0,0,.7),transparent);pointer-events:none}
+@media (max-width:560px){.club--full .club__gal{height:190px}}
+.gmap{position:absolute;inset:0;z-index:500;opacity:0;visibility:hidden;transition:opacity .5s var(--ease),visibility .5s;background:#0b0b10}
+.gmap.is-on{opacity:1;visibility:visible}
+.gmap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.gmap__back,.gmap__open{position:absolute;top:12px;z-index:2;padding:9px 14px;border-radius:999px;background:rgba(10,10,14,.88);color:#fff;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(8px)}
+.gmap__back{left:12px}.gmap__open{right:12px;bottom:auto}
