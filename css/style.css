@@ -1159,8 +1159,8 @@ a.feature:hover .feature__more{color:#fff}
 .club__cr{position:absolute;left:12px;bottom:10px;z-index:2;max-width:62%;font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.8);text-shadow:0 1px 6px rgba(0,0,0,.8);pointer-events:none}
 .club--full .club__gal::after{content:"";position:absolute;left:0;right:0;bottom:0;height:45%;background:linear-gradient(0deg,rgba(0,0,0,.7),transparent);pointer-events:none}
 @media (max-width:560px){.club--full .club__gal{height:190px}}
-.gmap{position:absolute;inset:0;z-index:500;opacity:0;visibility:hidden;transition:opacity .5s var(--ease),visibility .5s;background:#0b0b10}
+.gmap{position:absolute;inset:0;z-index:1100;opacity:0;visibility:hidden;transition:opacity .5s var(--ease),visibility .5s;background:#0b0b10}
 .gmap.is-on{opacity:1;visibility:visible}
 .gmap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
-.gmap__back,.gmap__open{position:absolute;top:12px;z-index:2;padding:9px 14px;border-radius:999px;background:rgba(10,10,14,.88);color:#fff;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(8px)}
-.gmap__back{left:12px}.gmap__open{right:12px;bottom:auto}
+.gmap__back,.gmap__open{position:absolute;bottom:40px;z-index:2;padding:9px 14px;border-radius:999px;background:rgba(10,10,14,.88);color:#fff;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(8px)}
+.gmap__back{left:12px}.gmap__open{right:60px}
