@@ -1,7 +1,7 @@
 /* =========================================================
    NO QUESTION EVENTS — partners page
-   1) "Logo warp": scroll pulls you through a 3D tunnel of
-      partner logos with hyperspace light streaks.
+   1) Logo showcase: logos assemble into a glass grid, then a
+      spotlight introduces every partner one by one.
    2) Partner / collab cards with links.
    3) Endless logo belt.
    ========================================================= */
@@ -39,88 +39,97 @@
     belt.innerHTML = '<div class="pbelt__track">' + row + row + "</div>";
   }
 
-  /* ---------- logo warp ---------- */
-  var sec = document.getElementById("pWarp");
+  /* ---------- logo showcase ----------
+     Scroll 1: the logos fly in from depth and lock into a precise
+     glass grid. Scroll 2: a spotlight moves tile by tile while the
+     name, role and city of each partner slide in on the left.     */
+  var sec = document.getElementById("pShow");
   if (!sec) return;
-  var stage = sec.querySelector(".pwarp__stage"), cap = sec.querySelector(".pwarp__cap"), capName = cap.querySelector("strong"), capRole = cap.querySelector("span");
-  var intro = sec.querySelector(".pwarp__intro"), bar = sec.querySelector(".pwarp__bar i");
-  var N = P.length, GAP = 1100, items = [];
-  var GOLD = 2.39996;
+  var grid = sec.querySelector(".pshow__grid"), glow = sec.querySelector(".pshow__glow"), bar = sec.querySelector(".pshow__bar i");
+  var intro = sec.querySelector(".pshow__intro"), now = sec.querySelector(".pshow__now"), nIdx = now.querySelector(".pshow__idx"), nName = now.querySelector(".pshow__name"), nRole = now.querySelector(".pshow__role"), nLinks = now.querySelector(".pshow__links");
+  var fin = sec.querySelector(".pshow__final");
+  var N = P.length, tiles = [];
+  var COL = ["242,230,58", "53,199,89", "120,110,255", "255,120,60", "70,170,255", "235,80,140", "242,230,58", "53,199,89", "120,110,255"];
+  function rnd(a, b) { return a + Math.random() * (b - a); }
   P.forEach(function (p, i) {
-    var el = document.createElement("div");
-    el.className = "pwarp__logo";
-    el.innerHTML = '<div class="pwarp__card">' + logoHTML(p) + "</div>";
-    stage.appendChild(el);
-    var a = i * GOLD + 0.6;
-    items.push({ el: el, p: p, a: a, z: -(i + 1) * GAP - 900 });
+    var el = document.createElement("a");
+    el.className = "ptile"; el.href = "#p-" + p.id; el.setAttribute("aria-label", p.name);
+    el.innerHTML = '<span class="ptile__in">' + logoHTML(p) + '<i class="ptile__shine" aria-hidden="true"></i></span>';
+    grid.appendChild(el);
+    tiles.push({ el: el, p: p, sx: rnd(-1, 1), sy: rnd(-1, 1), sz: rnd(-1800, -700), rx: rnd(-55, 55), ry: rnd(-70, 70), rz: rnd(-25, 25), focus: 0, a: 0 });
   });
-  // closing logo: No Question
-  var end = document.createElement("div");
-  end.className = "pwarp__logo pwarp__logo--nq";
-  end.innerHTML = '<div class="pwarp__card"><img src="assets/img/logo-white.svg" alt="No Question Events"></div>';
-  stage.appendChild(end);
-  items.push({ el: end, p: null, a: 0, z: -(N + 1.4) * GAP - 900, nq: true });
-  var TOTAL = (N + 1.4) * GAP + 900;
+  function pad(n) { return (n < 10 ? "0" : "") + n; }
+  function clamp(x, a, b) { return x < a ? a : x > b ? b : x; }
+  function ease(x) { x = clamp(x, 0, 1); return 1 - Math.pow(1 - x, 4); }
+  function sm(a, b, x) { x = clamp((x - a) / (b - a), 0, 1); return x * x * (3 - 2 * x); }
 
-  // hyperspace streaks
-  var cv = sec.querySelector("canvas"), g = cv.getContext("2d"), DPR = Math.min(window.devicePixelRatio || 1, 2), W = 0, H = 0;
-  var stars = [];
-  for (var s = 0; s < 420; s++) stars.push({ x: (Math.random() - 0.5) * 2, y: (Math.random() - 0.5) * 2, z: Math.random(), h: Math.random() });
-  function size() { W = cv.clientWidth; H = cv.clientHeight; cv.width = W * DPR; cv.height = H * DPR; }
-  size(); window.addEventListener("resize", size);
+  var W = 0, H = 0, T = 160, GAP = 14, cx = 0, cy = 0, mob = false;
+  function layout() {
+    W = sec.clientWidth; H = window.innerHeight; mob = W < 860;
+    T = mob ? Math.min((W - 32 - GAP * 2) / 3, H * 0.15) : Math.min(H * 0.22, W * 0.13, 210);
+    cx = mob ? W / 2 : W * 0.68; cy = mob ? H * 0.64 : H * 0.53;
+    grid.style.setProperty("--t", T.toFixed(1) + "px");
+  }
+  layout(); window.addEventListener("resize", layout);
 
-  var prog = 0, sm = 0, last = 0, vel = 0, visible = false, lastName = "";
+  var prog = 0, s = 0, mx = 0, my = 0, smx = 0, smy = 0, lastActive = -2, visible = false;
+  sec.addEventListener("pointermove", function (e) { mx = e.clientX / W - 0.5; my = e.clientY / H - 0.5; });
   function measure() {
-    var r = sec.getBoundingClientRect(), total = r.height - innerHeight;
-    prog = Math.max(0, Math.min(1, -r.top / Math.max(1, total)));
-    visible = r.top < innerHeight && r.bottom > 0;
+    var r = sec.getBoundingClientRect(), tot = r.height - innerHeight;
+    prog = clamp(-r.top / Math.max(1, tot), 0, 1); visible = r.top < innerHeight && r.bottom > 0;
   }
   window.addEventListener("scroll", measure, { passive: true }); measure();
 
-  function frame(time) {
+  function setNow(i) {
+    var p = P[i];
+    nIdx.textContent = pad(i + 1) + " / " + pad(N);
+    nName.textContent = p.name;
+    nRole.setAttribute("data-i18n", p.role); nRole.textContent = t(p.role) + (p.city ? " · " + p.city : "");
+    nLinks.innerHTML = window.NQ_SOCIAL_LINKS ? window.NQ_SOCIAL_LINKS(p.links, true) : "";
+    now.classList.remove("is-swap"); void now.offsetWidth; now.classList.add("is-swap");
+    sec.style.setProperty("--pc", COL[i % COL.length]);
+  }
+
+  function frame() {
     requestAnimationFrame(frame);
     if (!visible) return;
     measure();
-    var prev = sm; sm += (prog - sm) * (reduced ? 1 : 0.09); vel = vel * 0.85 + Math.abs(sm - prev) * 60 * 0.15;
-    var cam = sm * (TOTAL + 300), vw = innerWidth, vh = innerHeight, rad = Math.min(vw, vh) * (vw < 700 ? 0.22 : 0.3);
-    var nearest = null, nd = 1e9;
-    items.forEach(function (o, i) {
-      var z = o.z + cam;                      // 0 = at the screen plane
-      var x = o.nq ? 0 : Math.cos(o.a) * rad * (1 + 0.15 * Math.sin(i)), y = o.nq ? 0 : Math.sin(o.a) * rad * 0.62;
-      if (o.nq) { z = Math.min(z, -260); }
-      var op = z > 380 ? 0 : z > 120 ? 1 - (z - 120) / 260 : z < -GAP * 3.2 ? 0 : Math.min(1, (z + GAP * 3.2) / (GAP * 1.4));
-      var spin = o.nq ? 0 : Math.sin(time / 1600 + i) * 6 + z * 0.006;
-      o.el.style.transform = "translate(-50%,-50%) translate3d(" + x.toFixed(1) + "px," + y.toFixed(1) + "px," + z.toFixed(1) + "px) rotateY(" + spin.toFixed(2) + "deg)";
-      o.el.style.opacity = op.toFixed(3);
-      o.el.style.visibility = op > 0.01 ? "visible" : "hidden";
-      o.el.classList.toggle("is-near", z > -700 && z < 200);
-      if (!o.nq && op > 0.2 && Math.abs(z + 300) < nd) { nd = Math.abs(z + 300); nearest = o; }
+    s += (prog - s) * (reduced ? 1 : 0.1);
+    smx += (mx - smx) * 0.06; smy += (my - smy) * 0.06;
+    var assemble = s, spot = sm(0.42, 0.92, s), ending = sm(0.93, 0.99, s);
+    // grid tilt follows the cursor, flattens while a partner is in focus
+    var tilt = 1 - spot * 0.6 + ending * 0.6;
+    grid.style.transform = "translate3d(" + cx.toFixed(1) + "px," + cy.toFixed(1) + "px,0) rotateX(" + (-smy * 10 * tilt).toFixed(2) + "deg) rotateY(" + (smx * 14 * tilt).toFixed(2) + "deg)";
+    var active = spot > 0 && spot < 1 && s < 0.925 ? Math.min(N - 1, Math.floor(spot * N)) : -1;
+    var fpos = spot * N - 0.5;
+    tiles.forEach(function (o, i) {
+      var col = i % 3, row = Math.floor(i / 3);
+      var gx = (col - 1) * (T + GAP), gy = (row - 1) * (T + GAP);
+      var a = ease((assemble - 0.02 - i * 0.022) / 0.3);
+      o.a = a;
+      var x = gx + o.sx * W * 0.7 * (1 - a), y = gy + o.sy * H * 0.75 * (1 - a), z = o.sz * (1 - a);
+      var foc = active < 0 ? 0 : Math.max(0, 1 - Math.abs(i - fpos) * 1.15);
+      o.focus += (foc - o.focus) * 0.18;
+      var f = o.focus, lift = f * 70, sc = 1 + f * 0.14;
+      o.el.style.transform = "translate(-50%,-50%) translate3d(" + x.toFixed(1) + "px," + y.toFixed(1) + "px," + (z + lift).toFixed(1) + "px) rotateX(" + (o.rx * (1 - a)).toFixed(2) + "deg) rotateY(" + (o.ry * (1 - a)).toFixed(2) + "deg) rotateZ(" + (o.rz * (1 - a)).toFixed(2) + "deg) scale(" + sc.toFixed(3) + ")";
+      var dim = active < 0 ? 1 : 0.32 + f * 0.68;
+      o.el.style.opacity = (Math.min(1, a * 1.4) * dim).toFixed(3);
+      o.el.style.filter = a < 0.98 ? "blur(" + ((1 - a) * 14).toFixed(1) + "px)" : "none";
+      o.el.classList.toggle("is-focus", f > 0.6);
     });
-    var nqZ = items[items.length - 1].z + cam;
-    sec.classList.toggle("is-end", nqZ > -1500);
-    intro.style.opacity = Math.max(0, 1 - sm * 9).toFixed(3);
-    intro.style.transform = "translate(-50%,-50%) scale(" + (1 + sm * 3).toFixed(3) + ")";
-    if (nearest && nd < 900 && nqZ < -1500 && sm > 0.06) {
-      var k = nearest.p.id;
-      if (k !== lastName) { lastName = k; capName.textContent = nearest.p.name; capRole.setAttribute("data-i18n", nearest.p.role); capRole.textContent = t(nearest.p.role) + (nearest.p.city ? " · " + nearest.p.city : ""); cap.classList.remove("is-in"); void cap.offsetWidth; cap.classList.add("is-in"); }
-      cap.style.opacity = 1;
-    } else { cap.style.opacity = 0; lastName = ""; }
-    if (bar) bar.style.transform = "scaleX(" + sm.toFixed(4) + ")";
-
-    // streaks
-    g.setTransform(DPR, 0, 0, DPR, 0, 0);
-    g.fillStyle = "rgba(7,7,10,0.34)"; g.fillRect(0, 0, W, H);
-    var sp = 0.0025 + vel * 0.9, cx = W / 2, cy = H / 2, F = Math.max(W, H) * 0.5;
-    for (var j = 0; j < stars.length; j++) {
-      var st = stars[j], z0 = st.z;
-      st.z -= sp; if (st.z <= 0.02) { st.z = 1; st.x = (Math.random() - 0.5) * 2; st.y = (Math.random() - 0.5) * 2; continue; }
-      var x0 = cx + st.x / z0 * F * 0.5, y0 = cy + st.y / z0 * F * 0.5, x1 = cx + st.x / st.z * F * 0.5, y1 = cy + st.y / st.z * F * 0.5;
-      var a = Math.min(1, (1 - st.z) * 1.4);
-      var hue = st.h < 0.33 ? "242,230,58" : st.h < 0.66 ? "53,199,89" : "120,110,255";
-      g.strokeStyle = "rgba(" + hue + "," + (a * 0.85).toFixed(3) + ")"; g.lineWidth = 1 + (1 - st.z) * 1.6;
-      g.beginPath(); g.moveTo(x0, y0); g.lineTo(x1, y1); g.stroke();
-    }
+    intro.style.opacity = (1 - sm(0.34, 0.44, s)).toFixed(3);
+    intro.style.transform = "translate3d(0," + (-sm(0.34, 0.44, s) * 40).toFixed(1) + "px,0)";
+    now.style.opacity = (sm(0.42, 0.47, s) * (1 - sm(0.895, 0.925, s))).toFixed(3);
+    fin.style.opacity = ending.toFixed(3); fin.style.transform = "translate3d(0," + ((1 - ending) * 30).toFixed(1) + "px,0)";
+    sec.classList.toggle("is-spot", active >= 0);
+    if (active !== lastActive) { lastActive = active; if (active >= 0) setNow(active); }
+    if (active >= 0) {
+      var c = tiles[active], ccol = active % 3, crow = Math.floor(active / 3);
+      glow.style.transform = "translate(" + (cx + (ccol - 1) * (T + GAP)).toFixed(0) + "px," + (cy + (crow - 1) * (T + GAP)).toFixed(0) + "px)";
+    } else glow.style.transform = "translate(" + cx.toFixed(0) + "px," + cy.toFixed(0) + "px)";
+    glow.style.opacity = (0.35 + 0.65 * Math.max(spot > 0 ? 1 : assemble * 0.6, ending)).toFixed(3);
+    if (bar) bar.style.transform = "scaleX(" + s.toFixed(4) + ")";
   }
   requestAnimationFrame(frame);
-  document.addEventListener("click", function (e) { if (e.target.closest && e.target.closest("[data-lang]")) setTimeout(function () { lastName = ""; }, 30); });
+  document.addEventListener("click", function (e) { if (e.target.closest && e.target.closest("[data-lang]")) setTimeout(function () { if (lastActive >= 0) setNow(lastActive); }, 30); });
 })();
